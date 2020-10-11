@@ -55,7 +55,7 @@ function transferProjectToRemote(failed, successful) {
 // creates a temporary folder on the remote server
 function createRemoteTempFolder() {
   return ssh.execCommand(
-    'rm -rf deployment-handson-two && mkdir hackathon-starter', {
+    'rm -rf hackathon-starter && mkdir hackathon-starter', {
       cwd: '/home/ubuntu'
   });
 }
