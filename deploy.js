@@ -2,11 +2,8 @@ var cmd = require('node-cmd');
 var path, node_ssh, ssh, fs;
 fs = require('fs');
 path = require('path');
-//const {NodeSSH} = require('node-ssh')
-//ssh = new NodeSSH();
 node_ssh = require('node-ssh');
 ssh = new node_ssh();
-
 
 // the method that starts the deployment process
 function main() {
@@ -26,7 +23,7 @@ function installPM2() {
 function transferProjectToRemote(failed, successful) {
   return ssh.putDirectory(
     '../hackathon-starter',
-    '/home/ubuntu/hackathon-starter',
+    '/home/ubuntu/hackathon-starter-temp',
     {
       recursive: true,
       concurrency: 1,
@@ -52,7 +49,7 @@ function transferProjectToRemote(failed, successful) {
 // creates a temporary folder on the remote server
 function createRemoteTempFolder() {
   return ssh.execCommand(
-    'rm -rf hackathon-starter && mkdir hackathon-starter', {
+    'rm -rf hackathon-starter-temp && mkdir hackathon-starter-temp', {
       cwd: '/home/ubuntu'
   });
 }
@@ -68,7 +65,7 @@ function stopRemoteServices() {
 // updates the project source on the server
 function updateRemoteApp() {
   return ssh.execCommand(
-    'mkdir hackathon-starter && cp -r hackathon-starter/* hackathon-starter/ && rm -rf hackathon-starter', {
+    'mkdir hackathon-starter && cp -r hackathon-starter-temp/* hackathon-starter/ && rm -rf hackathon-starter-temp', {
       cwd: '/home/ubuntu'
   });
 }
@@ -98,7 +95,7 @@ function sshConnect() {
       return installPM2();
     })
     .then(function() {
-      console.log('Creating `hackathon-starter` folder.');
+      console.log('Creating `hackathon-starter-temp` folder.');
       return createRemoteTempFolder();
     })
     .then(function(result) {
